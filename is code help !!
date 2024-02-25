@@ -1,0 +1,23 @@
+pip install captcha
+
+from captcha.image import ImageCaptcha
+from flask import Flask, send_file
+
+app = Flask(__name__)
+
+# Генератор капчі
+def generate_captcha():
+    image = ImageCaptcha()
+    captcha_text = '1234'  # Ваш текст капчі
+    data = image.generate(captcha_text)
+    image.write(captcha_text, 'captcha.png')  # Збереження зображення капчі
+    return 'captcha.png'
+
+# Маршрут для отримання капчі
+@app.route('/captcha')
+def get_captcha():
+    captcha_image = generate_captcha()
+    return send_file(captcha_image, mimetype='image/png')
+
+if __name__ == '__main__':
+    app.run(debug=True)
